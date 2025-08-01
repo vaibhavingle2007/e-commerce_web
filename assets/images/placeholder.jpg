@@ -1,0 +1,11 @@
+# This is a placeholder for product images
+# In a real implementation, you would place actual .jpg, .png, or .webp image files here
+# For now, the website will show broken image icons, but the functionality will work
+# 
+# Sample image filenames referenced in the database:
+# - laptop.jpg
+# - phone.jpg  
+# - headphones.jpg
+# - watch.jpg
+# - tablet.jpg
+# - camera.jpg 
