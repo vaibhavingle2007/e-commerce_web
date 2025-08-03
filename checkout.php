@@ -136,76 +136,72 @@ $page_title = "Checkout";
 include 'inc/header.php';
 ?>
 
-<h1 style="text-align: center; margin: 30px 0; color: #2c3e50;">Checkout</h1>
+<div class="container">
+    <h1 style="text-align: center; margin: 50px 0 30px 0; font-size: 3rem; background: linear-gradient(135deg, var(--primary), var(--accent)); background-clip: text; -webkit-background-clip: text; color: transparent;">Checkout</h1>
 
+    <?php if (isset($error)): ?>
+        <div class="message error">
+            <?php echo $error; ?>
+        </div>
+    <?php endif; ?>
 
-
-<?php if (isset($error)): ?>
-    <div class="message error" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #f5c6cb;">
-        <?php echo $error; ?>
-    </div>
-<?php endif; ?>
-
-<div class="checkout-container">
-    <div>
-        <h2>Shipping Information</h2>
-        <form method="POST" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            <div class="form-group">
-                <label for="user_name">Full Name: *</label>
-                <input type="text" id="user_name" name="user_name" required 
-                       value="<?php echo htmlspecialchars($_POST['user_name'] ?? ''); ?>"
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Email: *</label>
-                <input type="email" id="email" name="email" required 
-                       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            </div>
-            
-            <div class="form-group">
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone" 
-                       value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>"
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-            </div>
-            
-            <div class="form-group">
-                <label for="address">Shipping Address: *</label>
-                <textarea id="address" name="address" rows="4" required
-                          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"><?php echo htmlspecialchars($_POST['address'] ?? ''); ?></textarea>
-            </div>
-            
-            <div style="margin-top: 30px;">
-                <button type="submit" class="btn btn-success" style="font-size: 16px; padding: 12px 24px;">
-                    Place Order - ₹<?php echo number_format($grand_total, 2); ?>
-                </button>
-                <a href="cart.php" class="btn btn-secondary">Back to Cart</a>
-            </div>
-        </form>
-    </div>
-    
-    <div class="order-summary" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-        <h3>Order Summary</h3>
-        <?php foreach ($cart_items as $product_id => $item): 
-            $product = $item['product'];
-            $quantity = $item['quantity'];
-            $total = $item['total'];
-        ?>
-            <div class="order-item" style="display: flex; justify-content: space-between; margin: 15px 0; padding: 10px 0; border-bottom: 1px solid #eee;">
-                <div>
-                    <strong><?php echo htmlspecialchars($product['name']); ?></strong><br>
-                    <small>Quantity: <?php echo $quantity; ?> × ₹<?php echo number_format($product['price'], 2); ?></small>
+    <div class="checkout-container">
+        <div class="shipping-form">
+            <h2 style="margin-bottom: 30px; font-size: 2rem; color: var(--text-primary);">Shipping Information</h2>
+            <form method="POST" class="checkout-form">
+                <div class="form-group">
+                    <label for="user_name">Full Name: *</label>
+                    <input type="text" id="user_name" name="user_name" required 
+                           value="<?php echo htmlspecialchars($_POST['user_name'] ?? ''); ?>">
                 </div>
-                <div>₹<?php echo number_format($total, 2); ?></div>
-            </div>
-        <?php endforeach; ?>
+                
+                <div class="form-group">
+                    <label for="email">Email: *</label>
+                    <input type="email" id="email" name="email" required 
+                           value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" 
+                           value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Shipping Address: *</label>
+                    <textarea id="address" name="address" rows="4" required><?php echo htmlspecialchars($_POST['address'] ?? ''); ?></textarea>
+                </div>
+                
+                <div class="btn-container" style="margin-top: 30px;">
+                    <button type="submit" class="btn btn-cosmic">
+                        Place Order - ₹<?php echo number_format($grand_total, 2); ?>
+                    </button>
+                    <a href="cart.php" class="btn btn-glass">Back to Cart</a>
+                </div>
+            </form>
+        </div>
         
-        <hr style="margin: 20px 0;">
-        <div class="order-item" style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2em;">
-            <strong>Total:</strong>
-            <strong>₹<?php echo number_format($grand_total, 2); ?></strong>
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <?php foreach ($cart_items as $product_id => $item): 
+                $product = $item['product'];
+                $quantity = $item['quantity'];
+                $total = $item['total'];
+            ?>
+                <div class="order-item">
+                    <div>
+                        <strong><?php echo htmlspecialchars($product['name']); ?></strong><br>
+                        <small>Quantity: <?php echo $quantity; ?> × ₹<?php echo number_format($product['price'], 2); ?></small>
+                    </div>
+                    <div>₹<?php echo number_format($total, 2); ?></div>
+                </div>
+            <?php endforeach; ?>
+            
+            <hr style="margin: 20px 0; border-color: var(--border);">
+            <div class="order-item total">
+                <strong>Total:</strong>
+                <strong>₹<?php echo number_format($grand_total, 2); ?></strong>
+            </div>
         </div>
     </div>
 </div>

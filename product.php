@@ -20,14 +20,18 @@ while ($row = $result->fetch_assoc()) {
     $products_by_category[$cat][] = $row;
 }
 
-$page_title = "All Products - E-Commerce Store";
+$page_title = "All Products - CosmicCart";
 include 'inc/header.php';
 ?>
 
-<h1 style="text-align: center; margin: 30px 0; color: #2c3e50; font-size: 2.5rem;">All Products</h1>
+<!-- Products Hero Section -->
+<section class="hero-section" style="padding: 60px 20px;">
+    <h1 class="hero-title">Cosmic Collection</h1>
+    <p class="hero-subtitle">Explore our stellar selection of premium products from across the galaxy</p>
+</section>
 
 <?php if (isset($_SESSION['cart_message'])): ?>
-    <div class="message <?php echo $_SESSION['cart_message_type']; ?>" style="text-align: center; margin: 20px 0; padding: 15px; border-radius: 5px; background-color: <?php echo $_SESSION['cart_message_type'] === 'success' ? '#d4edda' : '#f8d7da'; ?>; color: <?php echo $_SESSION['cart_message_type'] === 'success' ? '#155724' : '#721c24'; ?>; border: 1px solid <?php echo $_SESSION['cart_message_type'] === 'success' ? '#c3e6cb' : '#f5c6cb'; ?>;">
+    <div class="message <?php echo $_SESSION['cart_message_type']; ?>">
         <?php echo $_SESSION['cart_message']; ?>
     </div>
     <?php 
@@ -38,36 +42,101 @@ include 'inc/header.php';
 
 <?php foreach ($categories as $cat_key => $cat_label): ?>
     <?php if (!empty($products_by_category[$cat_key])): ?>
-        <h2 style="margin: 40px 0 20px 0; color: #314151; font-size: 2rem; border-bottom: 2px solid #eee; padding-bottom: 8px;"> <?php echo htmlspecialchars($cat_label); ?> </h2>
-        <div class="product-grid">
-            <?php foreach ($products_by_category[$cat_key] as $product): ?>
-                <div class="product-card">
-                    <img src="assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
-                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                         onerror="this.src='assets/images/placeholder.jpg'">
-                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                    <div class="price">₹<?php echo number_format($product['price'], 2); ?></div>
-                    <a href="product_detail.php?id=<?php echo $product['id']; ?>" class="btn">View Details</a>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <section style="margin: 60px 0;">
+            <h2 style="margin: 40px 0 30px 0; font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); background-clip: text; -webkit-background-clip: text; color: transparent; text-align: center; position: relative;">
+                <?php echo htmlspecialchars($cat_label); ?>
+                <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+            </h2>
+            <div class="product-grid">
+                <?php foreach ($products_by_category[$cat_key] as $product): ?>
+                    <div class="product-card">
+                        <?php if (strtotime($product['created_at']) > strtotime('-7 days')): ?>
+                            <div class="product-badge badge-new">New</div>
+                        <?php endif; ?>
+                        
+                        <img src="assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
+                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                             onerror="this.src='assets/images/placeholder.jpg'">
+                        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                        <p class="description"><?php echo htmlspecialchars(substr($product['description'], 0, 120)) . '...'; ?></p>
+                        <div class="price">₹<?php echo number_format($product['price'], 2); ?></div>
+                        
+                        <div class="btn-container">
+                            <a href="product_detail.php?id=<?php echo $product['id']; ?>" class="btn btn-glass">View Details</a>
+                            
+                            <form method="POST" action="cart.php" style="display: inline;">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-cosmic" onclick="showToast('Product added to cart!', 'success')">Add to Cart</button>
+                            </form>
+                        </div>
+                        
+                        <button class="quick-add" onclick="quickAddToCart(<?php echo $product['id']; ?>)">Quick Add</button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
     <?php endif; ?>
 <?php endforeach; ?>
 
 <?php if (!empty($products_by_category['Other'])): ?>
-    <h2 style="margin: 40px 0 20px 0; color: #314151; font-size: 2rem; border-bottom: 2px solid #eee; padding-bottom: 8px;">Other</h2>
-    <div class="product-grid">
-        <?php foreach ($products_by_category['Other'] as $product): ?>
-            <div class="product-card">
-                <img src="assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
-                     alt="<?php echo htmlspecialchars($product['name']); ?>"
-                     onerror="this.src='assets/images/placeholder.jpg'">
-                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                <div class="price">₹<?php echo number_format($product['price'], 2); ?></div>
-                <a href="product_detail.php?id=<?php echo $product['id']; ?>" class="btn">View Details</a>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <section style="margin: 60px 0;">
+        <h2 style="margin: 40px 0 30px 0; font-size: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); background-clip: text; -webkit-background-clip: text; color: transparent; text-align: center; position: relative;">
+            Other Products
+            <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+        </h2>
+        <div class="product-grid">
+            <?php foreach ($products_by_category['Other'] as $product): ?>
+                <div class="product-card">
+                    <?php if (strtotime($product['created_at']) > strtotime('-7 days')): ?>
+                        <div class="product-badge badge-new">New</div>
+                    <?php endif; ?>
+                    
+                    <img src="assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
+                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                         onerror="this.src='assets/images/placeholder.jpg'">
+                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <p class="description"><?php echo htmlspecialchars(substr($product['description'], 0, 120)) . '...'; ?></p>
+                    <div class="price">₹<?php echo number_format($product['price'], 2); ?></div>
+                    
+                    <div class="btn-container">
+                        <a href="product_detail.php?id=<?php echo $product['id']; ?>" class="btn btn-glass">View Details</a>
+                        
+                        <form method="POST" action="cart.php" style="display: inline;">
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-cosmic" onclick="showToast('Product added to cart!', 'success')">Add to Cart</button>
+                        </form>
+                    </div>
+                    
+                    <button class="quick-add" onclick="quickAddToCart(<?php echo $product['id']; ?>)">Quick Add</button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
 <?php endif; ?>
+
+<script>
+    function quickAddToCart(productId) {
+        fetch('cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=add&product_id=${productId}&quantity=1`
+        })
+        .then(response => response.text())
+        .then(() => {
+            showToast('Product added to cart!', 'success');
+            // Update cart badge
+            setTimeout(() => location.reload(), 1000);
+        })
+        .catch(error => {
+            showToast('Error adding to cart', 'error');
+        });
+    }
+</script>
 
 <?php include 'inc/footer.php'; ?> 

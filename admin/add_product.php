@@ -69,31 +69,51 @@ if ($_POST) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product - Admin</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+            color: #333;
+        }
+        
         .admin-nav {
             background: #2c3e50;
             padding: 15px 0;
             margin-bottom: 30px;
         }
+        
         .admin-nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 20px;
         }
+        
         .admin-nav h1 {
             color: white;
             margin: 0;
         }
+        
         .admin-menu {
             display: flex;
             list-style: none;
             margin: 0;
             padding: 0;
         }
+        
         .admin-menu li {
             margin-left: 20px;
         }
+        
         .admin-menu a {
             color: white;
             text-decoration: none;
@@ -101,9 +121,17 @@ if ($_POST) {
             border-radius: 4px;
             transition: background 0.3s;
         }
+        
         .admin-menu a:hover {
             background: rgba(255,255,255,0.1);
         }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
         .form-container {
             max-width: 600px;
             margin: 0 auto;
@@ -111,6 +139,87 @@ if ($_POST) {
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
@@ -120,7 +229,6 @@ if ($_POST) {
             <h1>Add Product</h1>
             <ul class="admin-menu">
                 <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="add_product.php">Add Product</a></li>
                 <li><a href="orders.php">Orders</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
@@ -158,6 +266,18 @@ if ($_POST) {
                 </div>
                 
                 <div class="form-group">
+                    <label for="category">Category: *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Mobile" <?php echo ($_POST['category'] ?? '') === 'Mobile' ? 'selected' : ''; ?>>Mobile</option>
+                        <option value="Laptop" <?php echo ($_POST['category'] ?? '') === 'Laptop' ? 'selected' : ''; ?>>Laptop</option>
+                        <option value="Keyboard and Mouse" <?php echo ($_POST['category'] ?? '') === 'Keyboard and Mouse' ? 'selected' : ''; ?>>Keyboard and Mouse</option>
+                        <option value="Headphones" <?php echo ($_POST['category'] ?? '') === 'Headphones' ? 'selected' : ''; ?>>Headphones</option>
+                        <option value="Accessories" <?php echo ($_POST['category'] ?? '') === 'Accessories' ? 'selected' : ''; ?>>Accessories</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="image">Upload Image:</label>
                     <input type="file" id="image" name="image" accept="image/*">
                     <small style="color: #666;">Upload JPG, PNG, GIF, or WebP images (max 5MB)</small>
@@ -169,18 +289,6 @@ if ($_POST) {
                            value="<?php echo htmlspecialchars($_POST['image_filename'] ?? ''); ?>"
                            placeholder="e.g., product.jpg">
                     <small style="color: #666;">If you prefer to manually place image in assets/images/ folder</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="category">Category: *</label>
-                    <select id="category" name="category" required>
-                        <option value="">Select Category</option>
-                        <option value="Mobile" <?php if(($_POST['category'] ?? '')=='Mobile') echo 'selected'; ?>>Mobile</option>
-                        <option value="Laptop" <?php if(($_POST['category'] ?? '')=='Laptop') echo 'selected'; ?>>Laptop</option>
-                        <option value="Keyboard and Mouse" <?php if(($_POST['category'] ?? '')=='Keyboard and Mouse') echo 'selected'; ?>>Keyboard and Mouse</option>
-                        <option value="Headphones" <?php if(($_POST['category'] ?? '')=='Headphones') echo 'selected'; ?>>Headphones</option>
-                        <option value="Accessories" <?php if(($_POST['category'] ?? '')=='Accessories') echo 'selected'; ?>>Accessories</option>
-                    </select>
                 </div>
                 
                 <div class="form-group">

@@ -34,53 +34,76 @@ $total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fe
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+            color: #333;
+        }
+        
         .admin-nav {
             background: #2c3e50;
-            padding: 1px 0;
+            padding: 15px 0;
             margin-bottom: 30px;
         }
+        
         .admin-nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
-            margin: 0 auto;
             padding: 0 20px;
-            height: 60px;
         }
+        
         .admin-nav h1 {
             color: white;
             margin: 0;
-            font-size: 1.5rem;
         }
+        
         .admin-menu {
             display: flex;
             list-style: none;
             margin: 0;
             padding: 0;
         }
+        
         .admin-menu li {
-            margin-left: 15px;
+            margin-left: 20px;
         }
+        
         .admin-menu a {
             color: white;
             text-decoration: none;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 4px;
             transition: background 0.3s;
-            font-size: 0.9rem;
         }
+        
         .admin-menu a:hover {
             background: rgba(255,255,255,0.1);
         }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
+        
         .stat-card {
             background: white;
             padding: 25px;
@@ -88,36 +111,95 @@ $total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fe
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
+        
         .stat-card h3 {
             color: #2c3e50;
             margin-bottom: 10px;
         }
+        
         .stat-card .number {
             font-size: 2rem;
             font-weight: bold;
             color: #3498db;
         }
+        
         .admin-table {
             background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
+        
         .admin-table th {
             background: #f8f9fa;
             padding: 15px;
             text-align: left;
             font-weight: 600;
+            color: #2c3e50;
         }
+        
         .admin-table td {
             padding: 15px;
             border-top: 1px solid #e1e5e9;
         }
+        
         .admin-table img {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
             border-radius: 4px;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
@@ -126,7 +208,6 @@ $total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fe
         <div class="container">
             <h1>Admin Dashboard</h1>
             <ul class="admin-menu">
-                <li><a href="dashboard.php">Dashboard</a></li>
                 <li><a href="add_product.php">Add Product</a></li>
                 <li><a href="orders.php">Orders</a></li>
                 <li><a href="logout.php">Logout</a></li>
@@ -154,27 +235,23 @@ $total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fe
             </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>Manage Products</h2>
-            <a href="add_product.php" class="btn btn-success">Add New Product</a>
-        </div>
-
+        <h2 style="margin-bottom: 20px; color: #2c3e50;">All Products</h2>
+        
         <div class="admin-table">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Image</th>
                         <th>Name</th>
                         <th>Price</th>
                         <th>Stock</th>
+                        <th>Category</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($product = $products->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $product['id']; ?></td>
                             <td>
                                 <img src="../assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>"
@@ -183,10 +260,10 @@ $total_sales = $conn->query("SELECT SUM(total_amount) as total FROM orders")->fe
                             <td><?php echo htmlspecialchars($product['name']); ?></td>
                             <td>₹<?php echo number_format($product['price'], 2); ?></td>
                             <td><?php echo $product['stock']; ?></td>
+                            <td><?php echo htmlspecialchars($product['category'] ?? 'N/A'); ?></td>
                             <td>
-                                <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn">Edit</a>
-                                <a href="?delete_product=<?php echo $product['id']; ?>" 
-                                   class="btn btn-danger" 
+                                <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-success">Edit</a>
+                                <a href="?delete_product=<?php echo $product['id']; ?>" class="btn btn-danger" 
                                    onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
                             </td>
                         </tr>

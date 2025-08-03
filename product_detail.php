@@ -13,25 +13,14 @@ if (!$product) {
     exit;
 }
 
-$page_title = $product['name'] . " - E-Commerce Store";
+$page_title = $product['name'] . " - CosmicCart";
 include 'inc/header.php';
 ?>
 
 <div class="product-detail">
-    <?php if (isset($_SESSION['cart_message'])): ?>
-        <div class="message <?php echo $_SESSION['cart_message_type']; ?>" style="text-align: center; margin: 20px 0; padding: 15px; border-radius: 5px; background-color: <?php echo $_SESSION['cart_message_type'] === 'success' ? '#d4edda' : '#f8d7da'; ?>; color: <?php echo $_SESSION['cart_message_type'] === 'success' ? '#155724' : '#721c24'; ?>; border: 1px solid <?php echo $_SESSION['cart_message_type'] === 'success' ? '#c3e6cb' : '#f5c6cb'; ?>;">
-            <?php echo $_SESSION['cart_message']; ?>
-        </div>
-        <?php 
-        unset($_SESSION['cart_message']);
-        unset($_SESSION['cart_message_type']);
-        ?>
-    <?php endif; ?>
-    
     <div class="product-image">
         <img src="assets/images/<?php echo htmlspecialchars($product['image']); ?>" 
              alt="<?php echo htmlspecialchars($product['name']); ?>"
-             style="width: 100%; max-width: 400px; border-radius: 8px;"
              onerror="this.src='assets/images/placeholder.jpg'">
     </div>
     
@@ -40,12 +29,12 @@ include 'inc/header.php';
         <div class="price">₹<?php echo number_format($product['price'], 2); ?></div>
         <div class="stock">Stock: <?php echo $product['stock']; ?> available</div>
         
-        <p style="margin: 20px 0; line-height: 1.6; color: #555;">
+        <p style="margin: 20px 0; line-height: 1.6; color: var(--text-secondary);">
             <?php echo nl2br(htmlspecialchars($product['description'])); ?>
         </p>
         
         <?php if ($product['stock'] > 0): ?>
-            <form method="POST" action="cart.php">
+            <form method="POST" action="cart.php" id="addToCartForm">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                 
@@ -55,16 +44,34 @@ include 'inc/header.php';
                            max="<?php echo $product['stock']; ?>" style="width: 100px;">
                 </div>
                 
-                <button type="submit" class="btn btn-success">Add to Cart</button>
-                <a href="product.php" class="btn btn-secondary">Back to Products</a>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-cosmic" onclick="showAddToCartToast(event)">Add to Cart</button>
+                    <a href="product.php" class="btn btn-glass">Back to Products</a>
+                </div>
             </form>
         <?php else: ?>
-            <div style="color: #e74c3c; font-weight: bold; margin: 20px 0;">
+            <div style="color: var(--error); font-weight: bold; margin: 20px 0;">
                 Out of Stock
             </div>
-            <a href="product.php" class="btn btn-secondary">Back to Products</a>
+            <div class="btn-container">
+                <a href="product.php" class="btn btn-glass">Back to Products</a>
+            </div>
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+function showAddToCartToast(event) {
+    event.preventDefault(); // Prevent immediate form submission
+    
+    // Show toast notification (using the function from header.php)
+    showToast('Product added to cart!', 'success');
+    
+    // Submit form after a short delay
+    setTimeout(() => {
+        document.getElementById('addToCartForm').submit();
+    }, 500);
+}
+</script>
 
 <?php include 'inc/footer.php'; ?> 
