@@ -45,7 +45,7 @@ include 'inc/header.php';
                 </div>
                 
                 <div class="btn-container">
-                    <button type="submit" class="btn btn-cosmic" onclick="showAddToCartToast(event)">Add to Cart</button>
+                    <button type="submit" class="btn btn-cosmic" data-product-id="<?php echo $product['id']; ?>">Add to Cart</button>
                     <a href="product.php" class="btn btn-glass">Back to Products</a>
                 </div>
             </form>
@@ -60,18 +60,6 @@ include 'inc/header.php';
     </div>
 </div>
 
-<script>
-function showAddToCartToast(event) {
-    event.preventDefault(); // Prevent immediate form submission
-    
-    // Show toast notification (using the function from header.php)
-    showToast('Product added to cart!', 'success');
-    
-    // Submit form after a short delay
-    setTimeout(() => {
-        document.getElementById('addToCartForm').submit();
-    }, 500);
-}
-</script>
+
 
 <?php include 'inc/footer.php'; ?> 

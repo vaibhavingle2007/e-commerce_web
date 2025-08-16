@@ -16,38 +16,83 @@ if ($_POST) {
     // Debug: Log the POST data
     error_log("Cart POST data: " . print_r($_POST, true));
     error_log("Session cart before: " . print_r($_SESSION['cart'] ?? [], true));
+    error_log("Request headers: " . print_r(getallheaders(), true));
     
     if ($action === 'add') {
         $quantity = (int)($_POST['quantity'] ?? 1);
         if ($quantity > 0 && $product_id > 0) {
-            if (!isset($_SESSION['cart'])) {
-                $_SESSION['cart'] = array();
-            }
-            if (isset($_SESSION['cart'][$product_id])) {
-                $_SESSION['cart'][$product_id] += $quantity;
+            // Verify product exists in database
+            $stmt = $conn->prepare("SELECT id, name, price, stock FROM products WHERE id = ? AND stock > 0");
+            $stmt->bind_param("i", $product_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $product = $result->fetch_assoc();
+            
+            if ($product) {
+                if (!isset($_SESSION['cart'])) {
+                    $_SESSION['cart'] = array();
+                }
+                if (isset($_SESSION['cart'][$product_id])) {
+                    $_SESSION['cart'][$product_id] += $quantity;
+                } else {
+                    $_SESSION['cart'][$product_id] = $quantity;
+                }
+                $message = "Product added to cart!";
+                
+                // Debug: Log the session after adding
+                error_log("Session cart after adding: " . print_r($_SESSION['cart'], true));
+                error_log("Product verified: " . print_r($product, true));
+                
+                // Check if this is an AJAX request
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    // AJAX request - return JSON response
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Product added to cart successfully!',
+                        'cart_count' => array_sum($_SESSION['cart']),
+                        'product_name' => $product['name']
+                    ]);
+                    exit;
+                } else {
+                    // Regular form submission - redirect back to referring page
+                    $redirect_url = $_SERVER['HTTP_REFERER'] ?? 'index.php';
+                    if (strpos($redirect_url, 'cart.php') !== false) {
+                        $redirect_url = 'index.php';
+                    }
+                    
+                    // Add success message to session for display on redirect
+                    $_SESSION['cart_message'] = "Product added to cart successfully!";
+                    $_SESSION['cart_message_type'] = 'success';
+                    
+                    header("Location: $redirect_url");
+                    exit;
+                }
             } else {
-                $_SESSION['cart'][$product_id] = $quantity;
+                $message = "Product not found or out of stock!";
+                error_log("Product not found or out of stock - product_id: $product_id");
+                
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Product not found or out of stock!'
+                    ]);
+                    exit;
+                }
             }
-            $message = "Product added to cart!";
-            
-            // Debug: Log the session after adding
-            error_log("Session cart after adding: " . print_r($_SESSION['cart'], true));
-            
-            // Redirect back to the referring page with success message
-            $redirect_url = $_SERVER['HTTP_REFERER'] ?? 'index.php';
-            if (strpos($redirect_url, 'cart.php') !== false) {
-                $redirect_url = 'index.php';
-            }
-            
-            // Add success message to session for display on redirect
-            $_SESSION['cart_message'] = "Product added to cart successfully!";
-            $_SESSION['cart_message_type'] = 'success';
-            
-            header("Location: $redirect_url");
-            exit;
         } else {
             $message = "Invalid product or quantity!";
             error_log("Invalid add to cart attempt - product_id: $product_id, quantity: $quantity");
+            
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid product or quantity!'
+                ]);
+                exit;
+            }
         }
     } elseif ($action === 'update') {
         $quantity = (int)($_POST['quantity'] ?? 0);

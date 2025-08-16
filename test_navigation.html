@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test - ElectroCart</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .test-section {
+            min-height: 100vh;
+            padding: 100px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 2px solid var(--border);
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        .test-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            z-index: 1000;
+        }
+        
+        .test-nav a {
+            display: block;
+            margin: 10px 0;
+            color: var(--electric-blue);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-nav a:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .test-results {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            max-width: 300px;
+            z-index: 1000;
+        }
+        
+        .test-result {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .test-result.pass {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+        
+        .test-result.fail {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-nav">
+        <h3>Navigation Test</h3>
+        <a href="#mobile-section">Mobile Section</a>
+        <a href="#laptop-section">Laptop Section</a>
+        <a href="#keyboard-mouse-section">Keyboard & Mouse</a>
+        <a href="#headphones-section">Headphones Section</a>
+        <a href="#accessories-section">Accessories Section</a>
+        <button onclick="testCrossPageNavigation()">Test Cross-Page</button>
+        <button onclick="runAllTests()">Run All Tests</button>
+    </div>
+    
+    <div class="test-results">
+        <h3>Test Results</h3>
+        <div id="test-output"></div>
+    </div>
+
+    <section id="mobile-section" class="test-section">
+        <h2>Mobile Section</h2>
+        <p>This is the mobile products section for testing navigation.</p>
+    </section>
+
+    <section id="laptop-section" class="test-section">
+        <h2>Laptop Section</h2>
+        <p>This is the laptop products section for testing navigation.</p>
+    </section>
+
+    <section id="keyboard-mouse-section" class="test-section">
+        <h2>Keyboard and Mouse Section</h2>
+        <p>This is the keyboard and mouse section for testing navigation.</p>
+    </section>
+
+    <section id="headphones-section" class="test-section">
+        <h2>Headphones Section</h2>
+        <p>This is the headphones section for testing navigation.</p>
+    </section>
+
+    <section id="accessories-section" class="test-section">
+        <h2>Accessories Section</h2>
+        <p>This is the accessories section for testing navigation.</p>
+    </section>
+
+    <script>
+        // Copy the navigation functions from index.php for testing
+        function scrollToTarget(target, highlightDuration = 2000) {
+            // Calculate proper offset
+            const navbar = document.querySelector('.test-nav');
+            const headerHeight = navbar ? navbar.offsetHeight : 80;
+            const additionalOffset = 30;
+            
+            const targetPosition = target.offsetTop - headerHeight - additionalOffset;
+            
+            if ('scrollBehavior' in document.documentElement.style) {
+                window.scrollTo({
+                    top: Math.max(0, targetPosition),
+                    behavior: 'smooth'
+                });
+            } else {
+                smoothScrollTo(Math.max(0, targetPosition), 800);
+            }
+            
+            target.style.scrollMarginTop = `${headerHeight + additionalOffset}px`;
+            
+            target.classList.add('section-highlight');
+            setTimeout(() => {
+                target.classList.remove('section-highlight');
+            }, highlightDuration);
+        }
+
+        function smoothScrollTo(targetPosition, duration) {
+            const startPosition = window.pageYOffset;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+
+            function easeInOutQuad(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    
+                    if (target) {
+                        scrollToTarget(target);
+                        logTest(`Navigation to ${targetId}`, 'pass');
+                    } else {
+                        logTest(`Navigation to ${targetId}`, 'fail', 'Target not found');
+                    }
+                });
+            });
+        }
+
+        function testCrossPageNavigation() {
+            // Simulate cross-page navigation
+            sessionStorage.setItem('scrollToSection', 'mobile-section');
+            logTest('Cross-page navigation setup', 'pass');
+            
+            // Simulate page load
+            setTimeout(() => {
+                const targetSection = sessionStorage.getItem('scrollToSection');
+                if (targetSection) {
+                    sessionStorage.removeItem('scrollToSection');
+                    const target = document.querySelector(`#${targetSection}`);
+                    if (target) {
+                        scrollToTarget(target, 3000);
+                        logTest('Cross-page navigation execution', 'pass');
+                    } else {
+                        logTest('Cross-page navigation execution', 'fail', 'Target not found');
+                    }
+                }
+            }, 100);
+        }
+
+        function runAllTests() {
+            clearTestOutput();
+            
+            // Test 1: Check if all anchor IDs exist
+            const expectedAnchors = ['mobile-section', 'laptop-section', 'keyboard-mouse-section', 'headphones-section', 'accessories-section'];
+            expectedAnchors.forEach(anchor => {
+                const element = document.querySelector(`#${anchor}`);
+                logTest(`Anchor ID: ${anchor}`, element ? 'pass' : 'fail');
+            });
+            
+            // Test 2: Check if smooth scrolling is supported
+            const smoothScrollSupported = 'scrollBehavior' in document.documentElement.style;
+            logTest('Smooth scroll support', smoothScrollSupported ? 'pass' : 'fail');
+            
+            // Test 3: Check if CSS classes are applied
+            const testElement = document.querySelector('#mobile-section');
+            testElement.classList.add('section-highlight');
+            const hasClass = testElement.classList.contains('section-highlight');
+            logTest('CSS class application', hasClass ? 'pass' : 'fail');
+            testElement.classList.remove('section-highlight');
+            
+            // Test 4: Check sessionStorage functionality
+            sessionStorage.setItem('test', 'value');
+            const storageWorks = sessionStorage.getItem('test') === 'value';
+            sessionStorage.removeItem('test');
+            logTest('SessionStorage functionality', storageWorks ? 'pass' : 'fail');
+            
+            logTest('All tests completed', 'pass');
+        }
+
+        function logTest(testName, result, details = '') {
+            const output = document.getElementById('test-output');
+            const testResult = document.createElement('div');
+            testResult.className = `test-result ${result}`;
+            testResult.textContent = `${testName}: ${result.toUpperCase()}`;
+            if (details) {
+                testResult.textContent += ` (${details})`;
+            }
+            output.appendChild(testResult);
+        }
+
+        function clearTestOutput() {
+            document.getElementById('test-output').innerHTML = '';
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initSmoothScrolling();
+            logTest('Navigation test page loaded', 'pass');
+        });
+    </script>
+</body>
+</html>

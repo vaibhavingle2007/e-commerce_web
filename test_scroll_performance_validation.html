@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Performance Validation</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #8b5cf6;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        .info { color: #3b82f6; }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b5cf6;
+        }
+        
+        .metric-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .benchmark-result {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        
+        .excellent { background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10b981; }
+        .good { background: rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; }
+        .fair { background: rgba(245, 158, 11, 0.2); border-left: 4px solid #f59e0b; }
+        .poor { background: rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Scroll Performance Validation</h1>
+            <p>Testing optimized category navigation scroll performance</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>🚀 Performance Tests</h2>
+            <button class="test-button" onclick="runScrollPerformanceTest()">Test Scroll Performance</button>
+            <button class="test-button" onclick="runFrameRateTest()">Test Frame Rate</button>
+            <button class="test-button" onclick="runMemoryTest()">Test Memory Usage</button>
+            <button class="test-button" onclick="runAllPerformanceTests()">Run All Tests</button>
+        </div>
+        
+        <div class="performance-grid" id="metricsGrid">
+            <div class="metric-card">
+                <div class="metric-value" id="avgFPS">--</div>
+                <div class="metric-label">Average FPS</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="scrollDuration">--</div>
+                <div class="metric-label">Scroll Duration (ms)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="memoryUsage">--</div>
+                <div class="metric-label">Memory Usage (MB)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="performanceScore">--</div>
+                <div class="metric-label">Performance Score</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Test Results</h2>
+            <div class="results" id="testResults">
+                <div class="info">Click a test button above to start performance validation...</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Performance Benchmarks</h2>
+            <div id="benchmarkResults">
+                <div class="benchmark-result excellent">
+                    <strong>Excellent (90-100):</strong> 60+ FPS, &lt;500ms scroll, &lt;50MB memory
+                </div>
+                <div class="benchmark-result good">
+                    <strong>Good (70-89):</strong> 45+ FPS, &lt;800ms scroll, &lt;75MB memory
+                </div>
+                <div class="benchmark-result fair">
+                    <strong>Fair (50-69):</strong> 30+ FPS, &lt;1200ms scroll, &lt;100MB memory
+                </div>
+                <div class="benchmark-result poor">
+                    <strong>Poor (&lt;50):</strong> Below fair thresholds
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Test Navigation Links</h2>
+            <button class="test-button" onclick="testCategoryNavigation('mobile-section')">Test Mobile Navigation</button>
+            <button class="test-button" onclick="testCategoryNavigation('laptop-section')">Test Laptop Navigation</button>
+            <button class="test-button" onclick="testCategoryNavigation('headphones-section')">Test Headphones Navigation</button>
+            <button class="test-button" onclick="window.open('index.php', '_blank')">Open Homepage</button>
+            <button class="test-button" onclick="window.open('product.php', '_blank')">Open Product Page</button>
+        </div>
+    </div>
+
+    <script>
+        let performanceMetrics = {
+            fps: [],
+            scrollDurations: [],
+            memoryUsage: [],
+            performanceScore: 0
+        };
+        
+        function logResult(message, type = 'info') {
+            const resultsContainer = document.getElementById('testResults');
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsContainer.appendChild(entry);
+            resultsContainer.scrollTop = resultsContainer.scrollHeight;
+        }
+        
+        function updateMetric(metricId, value, suffix = '') {
+            document.getElementById(metricId).textContent = value + suffix;
+        }
+        
+        async function runScrollPerformanceTest() {
+            logResult('⚡ Starting scroll performance test...', 'info');
+            
+            const testScrolls = [
+                { distance: 500, description: 'Short scroll' },
+                { distance: 1500, description: 'Medium scroll' },
+                { distance: 3000, description: 'Long scroll' }
+            ];
+            
+            const durations = [];
+            
+            for (const test of testScrolls) {
+                const startTime = performance.now();
+                
+                // Simulate smooth scroll
+                window.scrollTo({
+                    top: test.distance,
+                    behavior: 'smooth'
+                });
+                
+                // Wait for scroll to complete
+                await waitForScrollComplete(test.distance);
+                
+                const duration = performance.now() - startTime;
+                durations.push(duration);
+                
+                logResult(`${test.description}: ${duration.toFixed(2)}ms`, 
+                         duration < 800 ? 'success' : duration < 1200 ? 'warning' : 'error');
+                
+                // Reset scroll position
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            const avgDuration = durations.reduce((sum, d) => sum + d, 0) / durations.length;
+            performanceMetrics.scrollDurations = durations;
+            
+            updateMetric('scrollDuration', avgDuration.toFixed(0), 'ms');
+            logResult(`Average scroll duration: ${avgDuration.toFixed(2)}ms`, 
+                     avgDuration < 800 ? 'success' : 'warning');
+        }
+        
+        function waitForScrollComplete(targetY) {
+            return new Promise(resolve => {
+                const checkScroll = () => {
+                    const currentY = window.scrollY;
+                    if (Math.abs(currentY - targetY) < 10) {
+                        resolve();
+                    } else {
+                        requestAnimationFrame(checkScroll);
+                    }
+                };
+                
+                // Timeout after 3 seconds
+                setTimeout(resolve, 3000);
+                requestAnimationFrame(checkScroll);
+            });
+        }
+        
+        async function runFrameRateTest() {
+            logResult('🎬 Starting frame rate test...', 'info');
+            
+            const frameRates = [];
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            // Start continuous scrolling animation
+            let scrollPosition = 0;
+            const scrollAnimation = () => {
+                scrollPosition += 5;
+                window.scrollTo(0, scrollPosition);
+                
+                if (scrollPosition < 2000) {
+                    requestAnimationFrame(scrollAnimation);
+                }
+            };
+            
+            // Measure frame rate
+            const measureFPS = () => {
+                frameCount++;
+                const currentTime = performance.now();
+                const deltaTime = currentTime - lastTime;
+                
+                if (deltaTime >= 1000) {
+                    const fps = Math.round((frameCount * 1000) / deltaTime);
+                    frameRates.push(fps);
+                    frameCount = 0;
+                    lastTime = currentTime;
+                    
+                    logResult(`Current FPS: ${fps}`, fps >= 45 ? 'success' : fps >= 30 ? 'warning' : 'error');
+                }
+                
+                if (frameRates.length < 5) {
+                    requestAnimationFrame(measureFPS);
+                } else {
+                    const avgFPS = frameRates.reduce((sum, fps) => sum + fps, 0) / frameRates.length;
+                    performanceMetrics.fps = frameRates;
+                    
+                    updateMetric('avgFPS', avgFPS.toFixed(1));
+                    logResult(`Average FPS: ${avgFPS.toFixed(1)}`, 
+                             avgFPS >= 45 ? 'success' : avgFPS >= 30 ? 'warning' : 'error');
+                    
+                    // Reset scroll position
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+            
+            requestAnimationFrame(scrollAnimation);
+            requestAnimationFrame(measureFPS);
+        }
+        
+        async function runMemoryTest() {
+            logResult('💾 Starting memory usage test...', 'info');
+            
+            if (!('memory' in performance)) {
+                logResult('⚠️ Memory API not supported in this browser', 'warning');
+                return;
+            }
+            
+            const initialMemory = performance.memory.usedJSHeapSize;
+            
+            // Perform intensive scroll operations
+            for (let i = 0; i < 100; i++) {
+                const randomY = Math.random() * 2000;
+                window.scrollTo({ top: randomY, behavior: 'smooth' });
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+            
+            // Force garbage collection if available
+            if (window.gc) {
+                window.gc();
+            }
+            
+            const finalMemory = performance.memory.usedJSHeapSize;
+            const memoryIncrease = (finalMemory - initialMemory) / 1024 / 1024; // MB
+            const totalMemoryMB = finalMemory / 1024 / 1024;
+            
+            performanceMetrics.memoryUsage.push(totalMemoryMB);
+            
+            updateMetric('memoryUsage', totalMemoryMB.toFixed(1), 'MB');
+            logResult(`Memory usage: ${totalMemoryMB.toFixed(1)}MB`, 
+                     totalMemoryMB < 50 ? 'success' : totalMemoryMB < 75 ? 'warning' : 'error');
+            logResult(`Memory increase: ${memoryIncrease.toFixed(1)}MB`, 
+                     memoryIncrease < 5 ? 'success' : memoryIncrease < 10 ? 'warning' : 'error');
+            
+            // Reset scroll position
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function calculatePerformanceScore() {
+            let score = 0;
+            let factors = 0;
+            
+            // FPS score (40% weight)
+            if (performanceMetrics.fps.length > 0) {
+                const avgFPS = performanceMetrics.fps.reduce((sum, fps) => sum + fps, 0) / performanceMetrics.fps.length;
+                if (avgFPS >= 60) score += 40;
+                else if (avgFPS >= 45) score += 30;
+                else if (avgFPS >= 30) score += 20;
+                else score += 10;
+                factors++;
+            }
+            
+            // Scroll duration score (35% weight)
+            if (performanceMetrics.scrollDurations.length > 0) {
+                const avgDuration = performanceMetrics.scrollDurations.reduce((sum, d) => sum + d, 0) / performanceMetrics.scrollDurations.length;
+                if (avgDuration < 500) score += 35;
+                else if (avgDuration < 800) score += 25;
+                else if (avgDuration < 1200) score += 15;
+                else score += 5;
+                factors++;
+            }
+            
+            // Memory usage score (25% weight)
+            if (performanceMetrics.memoryUsage.length > 0) {
+                const avgMemory = performanceMetrics.memoryUsage.reduce((sum, m) => sum + m, 0) / performanceMetrics.memoryUsage.length;
+                if (avgMemory < 50) score += 25;
+                else if (avgMemory < 75) score += 18;
+                else if (avgMemory < 100) score += 12;
+                else score += 5;
+                factors++;
+            }
+            
+            const finalScore = factors > 0 ? Math.round(score / factors * 100 / 100) : 0;
+            performanceMetrics.performanceScore = finalScore;
+            
+            updateMetric('performanceScore', finalScore);
+            
+            let scoreClass = 'poor';
+            if (finalScore >= 90) scoreClass = 'excellent';
+            else if (finalScore >= 70) scoreClass = 'good';
+            else if (finalScore >= 50) scoreClass = 'fair';
+            
+            logResult(`Performance Score: ${finalScore}/100 (${scoreClass.toUpperCase()})`, 
+                     scoreClass === 'excellent' || scoreClass === 'good' ? 'success' : 
+                     scoreClass === 'fair' ? 'warning' : 'error');
+        }
+        
+        async function runAllPerformanceTests() {
+            logResult('🚀 Starting comprehensive performance test suite...', 'info');
+            
+            try {
+                await runScrollPerformanceTest();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await runFrameRateTest();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await runMemoryTest();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                calculatePerformanceScore();
+                
+                logResult('🎉 All performance tests completed!', 'success');
+                
+                // Generate summary
+                setTimeout(() => {
+                    generatePerformanceSummary();
+                }, 1000);
+                
+            } catch (error) {
+                logResult(`❌ Performance test error: ${error.message}`, 'error');
+            }
+        }
+        
+        function generatePerformanceSummary() {
+            logResult('📊 Performance Summary:', 'info');
+            
+            if (performanceMetrics.fps.length > 0) {
+                const avgFPS = performanceMetrics.fps.reduce((sum, fps) => sum + fps, 0) / performanceMetrics.fps.length;
+                logResult(`  Average FPS: ${avgFPS.toFixed(1)}`, 'info');
+            }
+            
+            if (performanceMetrics.scrollDurations.length > 0) {
+                const avgDuration = performanceMetrics.scrollDurations.reduce((sum, d) => sum + d, 0) / performanceMetrics.scrollDurations.length;
+                logResult(`  Average Scroll Duration: ${avgDuration.toFixed(2)}ms`, 'info');
+            }
+            
+            if (performanceMetrics.memoryUsage.length > 0) {
+                const avgMemory = performanceMetrics.memoryUsage.reduce((sum, m) => sum + m, 0) / performanceMetrics.memoryUsage.length;
+                logResult(`  Average Memory Usage: ${avgMemory.toFixed(1)}MB`, 'info');
+            }
+            
+            logResult(`  Overall Score: ${performanceMetrics.performanceScore}/100`, 'info');
+            
+            // Recommendations
+            if (performanceMetrics.performanceScore < 70) {
+                logResult('💡 Recommendations:', 'warning');
+                
+                if (performanceMetrics.fps.length > 0) {
+                    const avgFPS = performanceMetrics.fps.reduce((sum, fps) => sum + fps, 0) / performanceMetrics.fps.length;
+                    if (avgFPS < 45) {
+                        logResult('  - Consider reducing animation complexity', 'warning');
+                        logResult('  - Enable hardware acceleration with CSS transforms', 'warning');
+                    }
+                }
+                
+                if (performanceMetrics.scrollDurations.length > 0) {
+                    const avgDuration = performanceMetrics.scrollDurations.reduce((sum, d) => sum + d, 0) / performanceMetrics.scrollDurations.length;
+                    if (avgDuration > 800) {
+                        logResult('  - Optimize scroll event handlers', 'warning');
+                        logResult('  - Use requestAnimationFrame for scroll updates', 'warning');
+                    }
+                }
+                
+                if (performanceMetrics.memoryUsage.length > 0) {
+                    const avgMemory = performanceMetrics.memoryUsage.reduce((sum, m) => sum + m, 0) / performanceMetrics.memoryUsage.length;
+                    if (avgMemory > 75) {
+                        logResult('  - Review memory leaks in event listeners', 'warning');
+                        logResult('  - Consider debouncing scroll events', 'warning');
+                    }
+                }
+            } else {
+                logResult('✅ Performance is within acceptable ranges!', 'success');
+            }
+        }
+        
+        async function testCategoryNavigation(sectionId) {
+            logResult(`🔗 Testing navigation to ${sectionId}...`, 'info');
+            
+            // Open product page and navigate to section
+            const productWindow = window.open(`product.php#${sectionId}`, '_blank');
+            
+            if (productWindow) {
+                logResult(`✅ Opened product page with ${sectionId}`, 'success');
+                logResult('📝 Manually verify smooth scrolling to the section', 'info');
+            } else {
+                logResult('❌ Failed to open product page', 'error');
+            }
+        }
+        
+        // Initialize performance monitoring
+        document.addEventListener('DOMContentLoaded', () => {
+            logResult('⚡ Scroll Performance Validation Tool loaded', 'info');
+            logResult('🧪 Ready to test optimized scroll performance', 'info');
+            
+            // Show browser info
+            logResult(`🌐 Browser: ${navigator.userAgent.split(' ').pop()}`, 'info');
+            logResult(`📱 Viewport: ${window.innerWidth}x${window.innerHeight}`, 'info');
+            
+            if ('memory' in performance) {
+                const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                logResult(`💾 Initial Memory: ${memoryMB}MB`, 'info');
+            }
+        });
+    </script>
+</body>
+</html>

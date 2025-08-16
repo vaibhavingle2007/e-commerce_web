@@ -1,0 +1,79 @@
+{
+  "name": "ElectroCart - Premium Electronics Store",
+  "short_name": "ElectroCart",
+  "description": "Your premier destination for cutting-edge electronics. From smartphones to smartwatches, we deliver innovation and quality.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "electronics", "technology"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiMwYTBhMGYiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZDRmZiI+CjxwYXRoIGQ9Ik0xMiAyTDEzLjA5IDguMjZMMjAgOUwxMy4wOSA5Ljc0TDEyIDEyTDEwLjkxIDkuNzRMNCA5TDEwLjkxIDguMjZMMTIgMloiLz4KPHN2ZyB4PSI0IiB5PSIxNCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZmZmZiI+CjxwYXRoIGQ9Ik03IDE4QzUuOSAxOCA1IDE3LjEgNSAxNlM1LjkgMTQgNyAxNFMxMCAxNC45IDEwIDE2UzkuMSAxOCA3IDE4Wk0xIDJWNEg0TDcuNiAxMy41OUM3LjIgMTMuOSA3IDE0LjQgNyAxNUM3IDE2LjEgNy45IDE3IDkgMTdIMTlWMTVIOUM4LjcgMTUgOC43IDE1IDguNyAxNUw4LjEgMTNIMTdMMjEgNUg2TDUuMiAzSDFWMlpNMTcgMThDMTUuOSAxOCAxNSAxNy4xIDE1IDE2UzE1LjkgMTQgMTcgMTRTMTkgMTQuOSAxOSAxNlMxOC4xIDE4IDE3IDE4WiIvPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "48x48",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTgiIGZpbGw9IiMwYTBhMGYiLz4KPHN2ZyB4PSIxMiIgeT0iMTIiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBkNGZmIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDkuNzRMMTIgMTJMMTAuOTEgOS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8c3ZnIHg9IjYiIHk9IjIxIiB3aWR0aD0iMjQiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZmZmZiI+CjxwYXRoIGQ9Ik03IDE4QzUuOSAxOCA1IDE3LjEgNSAxNlM1LjkgMTQgNyAxNFMxMCAxNC45IDEwIDE2UzkuMSAxOCA3IDE4Wk0xIDJWNEg0TDcuNiAxMy41OUM3LjIgMTMuOSA3IDE0LjQgNyAxNUM3IDE2LjEgNy45IDE3IDkgMTdIMTlWMTVIOUM4LjcgMTUgOC43IDE1IDguNyAxNUw4LjEgMTNIMTdMMjEgNUg2TDUuMiAzSDFWMlpNMTcgMThDMTUuOSAxOCAxNSAxNy4xIDE1IDE2UzE1LjkgMTQgMTcgMTRTMTkgMTQuOSAxOSAxNlMxOC4xIDE4IDE3IDE4WiIvPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiMwYTBhMGYiLz4KPHN2ZyB4PSIzMiIgeT0iMzIiIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiMwMGQ0ZmYiPgo8cGF0aCBkPSJNMTIgMkwxMy4wOSA4LjI2TDIwIDlMMTMuMDkgOS43NEwxMiAxMkwxMC45MSA5Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIi8+CjxzdmcgeD0iMTYiIHk9IjU2IiB3aWR0aD0iNjQiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZmZmZiI+CjxwYXRoIGQ9Ik03IDE4QzUuOSAxOCA1IDE3LjEgNSAxNlM1LjkgMTQgNyAxNFMxMCAxNC45IDEwIDE2UzkuMSAxOCA3IDE4Wk0xIDJWNEg0TDcuNiAxMy41OUM3LjIgMTMuOSA3IDE0LjQgNyAxNUM3IDE2LjEgNy45IDE3IDkgMTdIMTlWMTVIOUM4LjcgMTUgOC43IDE1IDguNyAxNUw4LjEgMTNIMTdMMjEgNUg2TDUuMiAzSDFWMlpNMTcgMThDMTUuOSAxOCAxNSAxNy4xIDE1IDE2UzE1LjkgMTQgMTcgMTRTMTkgMTQuOSAxOSAxNlMxOC4xIDE4IDE3IDE4WiIvPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4IiBmaWxsPSIjMGEwYTBmIi8+CjxzdmcgeD0iODYiIHk9Ijg2IiB3aWR0aD0iMzQwIiBoZWlnaHQ9IjM0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBkNGZmIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDkuNzRMMTIgMTJMMTAuOTEgOS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8c3ZnIHg9IjQyIiB5PSIxNDkiIHdpZHRoPSIxNzAiIGhlaWdodD0iODUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZmZmZiI+CjxwYXRoIGQ9Ik03IDE4QzUuOSAxOCA1IDE3LjEgNSAxNlM1LjkgMTQgNyAxNFMxMCAxNC45IDEwIDE2UzkuMSAxOCA3IDE4Wk0xIDJWNEg0TDcuNiAxMy41OUM3LjIgMTMuOSA3IDE0LjQgNyAxNUM3IDE2LjEgNy45IDE3IDkgMTdIMTlWMTVIOUM4LjcgMTUgOC43IDE1IDguNyAxNUw4LjEgMTNIMTdMMjEgNUg2TDUuMiAzSDFWMlpNMTcgMThDMTUuOSAxOCAxNSAxNy4xIDE1IDE2UzE1LjkgMTQgMTcgMTRTMTkgMTQuOSAxOSAxNlMxOC4xIDE4IDE3IDE4WiIvPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Products",
+      "short_name": "Products",
+      "description": "Browse all available electronics",
+      "url": "/product.php",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiMwYTBhMGYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBkNGZmIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDkuNzRMMTIgMTJMMTAuOTEgOS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8L3N2Zz4KPC9zdmc+",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Shopping Cart",
+      "short_name": "Cart",
+      "description": "View your shopping cart",
+      "url": "/cart.php",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiMwYTBhMGYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBmZmZmIj4KPHBhdGggZD0iTTcgMThDNS45IDE4IDUgMTcuMSA1IDE2UzUuOSAxNCA3IDE0UzEwIDE0LjkgMTAgMTZTOS4xIDE4IDcgMThaIi8+CjxwYXRoIGQ9Ik0xIDJWNEg0TDcuNiAxMy41OUM3LjIgMTMuOSA3IDE0LjQgNyAxNUM3IDE2LjEgNy45IDE3IDkgMTdIMTlWMTVIOUM4LjcgMTUgOC43IDE1IDguNyAxNUw4LjEgMTNIMTdMMjEgNUg2TDUuMiAzSDFWMloiLz4KPHBhdGggZD0iTTE3IDE4QzE1LjkgMTggMTUgMTcuMSAxNSAxNlMxNS45IDE0IDE3IDE0UzE5IDE0LjkgMTkgMTZTMTguMSAxOCAxNyAxOFoiLz4KPC9zdmc+Cjwvc3ZnPg==",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNTY4IiBmaWxsPSIjMGEwYTBmIi8+CjxyZWN0IHg9IjIwIiB5PSI2MCIgd2lkdGg9IjI4MCIgaGVpZ2h0PSI0MCIgcng9IjIwIiBmaWxsPSIjMWExYTJlIi8+CjxyZWN0IHg9IjIwIiB5PSIxMjAiIHdpZHRoPSIyODAiIGhlaWdodD0iMjAwIiByeD0iMjAiIGZpbGw9IiMxYTFhMmUiLz4KPHJlY3QgeD0iMjAiIHk9IjM0MCIgd2lkdGg9IjEzNSIgaGVpZ2h0PSIxODAiIHJ4PSIyMCIgZmlsbD0iIzFhMWEyZSIvPgo8cmVjdCB4PSIxNjUiIHk9IjM0MCIgd2lkdGg9IjEzNSIgaGVpZ2h0PSIxODAiIHJ4PSIyMCIgZmlsbD0iIzFhMWEyZSIvPgo8L3N2Zz4K",
+      "sizes": "320x568",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI3NjgiIHZpZXdCb3g9IjAgMCAxMDI0IDc2OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMjQiIGhlaWdodD0iNzY4IiBmaWxsPSIjMGEwYTBmIi8+CjxyZWN0IHg9IjQwIiB5PSI2MCIgd2lkdGg9Ijk0NCIgaGVpZ2h0PSI2MCIgcng9IjMwIiBmaWxsPSIjMWExYTJlIi8+CjxyZWN0IHg9IjQwIiB5PSIxNDAiIHdpZHRoPSI0NjAiIGhlaWdodD0iMzAwIiByeD0iMzAiIGZpbGw9IiMxYTFhMmUiLz4KPHJlY3QgeD0iNTIwIiB5PSIxNDAiIHdpZHRoPSI0NjQiIGhlaWdodD0iMzAwIiByeD0iMzAiIGZpbGw9IiMxYTFhMmUiLz4KPHJlY3QgeD0iNDAiIHk9IjQ2MCIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIyNDAiIHJ4PSIzMCIgZmlsbD0iIzFhMWEyZSIvPgo8cmVjdCB4PSIyOTAiIHk9IjQ2MCIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIyNDAiIHJ4PSIzMCIgZmlsbD0iIzFhMWEyZSIvPgo8cmVjdCB4PSI1NDAiIHk9IjQ2MCIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIyNDAiIHJ4PSIzMCIgZmlsbD0iIzFhMWEyZSIvPgo8cmVjdCB4PSI3OTAiIHk9IjQ2MCIgd2lkdGg9IjE5NCIgaGVpZ2h0PSIyNDAiIHJ4PSIzMCIgZmlsbD0iIzFhMWEyZSIvPgo8L3N2Zz4K",
+      "sizes": "1024x768",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ]
+}

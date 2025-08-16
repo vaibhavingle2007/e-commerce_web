@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Navigation Test Runner</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #8b5cf6;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        .info { color: #3b82f6; }
+        
+        .progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #10b981, #059669);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Category Navigation Test Runner</h1>
+            <p>Automated testing suite for category navigation functionality</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>🚀 Quick Test Actions</h2>
+            <button class="test-button" onclick="runValidationTests()">Run Validation Tests</button>
+            <button class="test-button" onclick="runPerformanceTests()">Run Performance Tests</button>
+            <button class="test-button" onclick="runAllTests()">Run All Tests</button>
+            <button class="test-button" onclick="openManualTests()">Open Manual Tests</button>
+        </div>
+        
+        <div class="progress" id="testProgress" style="display: none;">
+            <h3>Test Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">Initializing tests...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Test Results</h2>
+            <div class="results" id="testResults">
+                <div class="info">Click a test button above to start testing...</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📋 Test Links</h2>
+            <button class="test-button" onclick="window.open('test_category_navigation_comprehensive.html', '_blank')">
+                Comprehensive Test Suite
+            </button>
+            <button class="test-button" onclick="window.open('test_manual_category_navigation.html', '_blank')">
+                Manual Test Guide
+            </button>
+            <button class="test-button" onclick="window.open('test_scroll_performance_validation.html', '_blank')">
+                ⚡ Performance Validation
+            </button>
+            <button class="test-button" onclick="window.open('index.php', '_blank')">
+                Test Homepage
+            </button>
+            <button class="test-button" onclick="window.open('product.php', '_blank')">
+                Test Product Page
+            </button>
+        </div>
+    </div>
+
+    <script src="test_category_validation.js"></script>
+    <script src="test_navigation_performance.js"></script>
+    
+    <script>
+        let testResults = [];
+        
+        function logResult(message, type = 'info') {
+            const resultsContainer = document.getElementById('testResults');
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsContainer.appendChild(entry);
+            resultsContainer.scrollTop = resultsContainer.scrollHeight;
+        }
+        
+        function updateProgress(percentage, text) {
+            const progressContainer = document.getElementById('testProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressContainer.style.display = 'block';
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = text;
+        }
+        
+        async function runValidationTests() {
+            logResult('🔍 Starting validation tests...', 'info');
+            updateProgress(0, 'Initializing validation tests...');
+            
+            try {
+                if (!window.categoryValidator) {
+                    logResult('⚠️ Initializing validator...', 'warning');
+                    window.categoryValidator = await new CategoryNavigationValidator().init();
+                    updateProgress(20, 'Validator initialized...');
+                }
+                
+                updateProgress(40, 'Running validation tests...');
+                const results = await window.categoryValidator.runAllTests();
+                
+                updateProgress(80, 'Processing results...');
+                
+                logResult(`📊 Validation Results:`, 'info');
+                logResult(`Total Tests: ${results.summary.totalTests}`, 'info');
+                logResult(`Passed: ${results.summary.passedTests}`, 'success');
+                logResult(`Failed: ${results.summary.failedTests}`, results.summary.failedTests > 0 ? 'error' : 'success');
+                logResult(`Success Rate: ${results.summary.successRate}%`, results.summary.successRate >= 80 ? 'success' : 'warning');
+                
+                if (results.failedRequirements.length > 0) {
+                    logResult('❌ Failed Requirements:', 'error');
+                    results.failedRequirements.forEach(req => {
+                        logResult(`  - ${req.requirement}: ${req.description}`, 'error');
+                    });
+                }
+                
+                if (results.recommendations.length > 0) {
+                    logResult('💡 Recommendations:', 'warning');
+                    results.recommendations.forEach(rec => {
+                        logResult(`  - ${rec}`, 'warning');
+                    });
+                }
+                
+                updateProgress(100, 'Validation tests completed!');
+                
+                // Offer to export results
+                setTimeout(() => {
+                    if (confirm('Export validation results?')) {
+                        window.categoryValidator.exportValidationResults();
+                        window.categoryValidator.generateHTMLReport();
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                logResult(`❌ Validation test error: ${error.message}`, 'error');
+                updateProgress(0, 'Validation tests failed');
+            }
+        }
+        
+        async function runPerformanceTests() {
+            logResult('⚡ Starting performance tests...', 'info');
+            updateProgress(0, 'Initializing performance tests...');
+            
+            try {
+                if (!window.navPerfTester) {
+                    logResult('⚠️ Initializing performance tester...', 'warning');
+                    window.navPerfTester = new NavigationPerformanceTester().init();
+                    updateProgress(20, 'Performance tester initialized...');
+                }
+                
+                updateProgress(40, 'Running performance tests...');
+                const results = await window.navPerfTester.runAllTests();
+                
+                updateProgress(80, 'Processing performance results...');
+                
+                logResult(`⚡ Performance Results:`, 'info');
+                logResult(`Total Duration: ${results.summary.totalDuration.toFixed(2)}ms`, 'info');
+                logResult(`Tests Run: ${results.summary.testsRun}`, 'info');
+                
+                if (results.recommendations.length > 0) {
+                    logResult('💡 Performance Recommendations:', 'warning');
+                    results.recommendations.forEach(rec => {
+                        logResult(`  - ${rec}`, 'warning');
+                    });
+                } else {
+                    logResult('✅ No performance issues detected', 'success');
+                }
+                
+                updateProgress(100, 'Performance tests completed!');
+                
+                // Offer to export results
+                setTimeout(() => {
+                    if (confirm('Export performance results?')) {
+                        window.navPerfTester.exportResults();
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                logResult(`❌ Performance test error: ${error.message}`, 'error');
+                updateProgress(0, 'Performance tests failed');
+            }
+        }
+        
+        async function runAllTests() {
+            logResult('🚀 Starting comprehensive test suite...', 'info');
+            updateProgress(0, 'Starting all tests...');
+            
+            try {
+                // Run validation tests first
+                updateProgress(10, 'Running validation tests...');
+                await runValidationTests();
+                
+                // Wait a moment
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Run performance tests
+                updateProgress(60, 'Running performance tests...');
+                await runPerformanceTests();
+                
+                updateProgress(100, 'All tests completed!');
+                logResult('🎉 Comprehensive test suite completed!', 'success');
+                
+            } catch (error) {
+                logResult(`❌ Test suite error: ${error.message}`, 'error');
+                updateProgress(0, 'Test suite failed');
+            }
+        }
+        
+        function openManualTests() {
+            window.open('test_manual_category_navigation.html', '_blank');
+            logResult('📖 Manual test guide opened in new tab', 'info');
+        }
+        
+        // Test individual category links
+        async function testCategoryLink(category, anchor) {
+            logResult(`🔗 Testing ${category} category link...`, 'info');
+            
+            try {
+                // Test if anchor exists
+                const response = await fetch('product.php');
+                const html = await response.text();
+                
+                if (html.includes(`id="${anchor}"`)) {
+                    logResult(`✅ ${category} anchor found: ${anchor}`, 'success');
+                    return true;
+                } else {
+                    logResult(`❌ ${category} anchor not found: ${anchor}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                logResult(`❌ Error testing ${category}: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // Quick category link tests
+        async function quickCategoryTest() {
+            logResult('🔗 Running quick category link tests...', 'info');
+            
+            const categories = [
+                { name: 'Mobile', anchor: 'mobile-section' },
+                { name: 'Laptop', anchor: 'laptop-section' },
+                { name: 'Keyboard and Mouse', anchor: 'keyboard-mouse-section' },
+                { name: 'Headphones', anchor: 'headphones-section' },
+                { name: 'Accessories', anchor: 'accessories-section' }
+            ];
+            
+            let passed = 0;
+            for (const category of categories) {
+                if (await testCategoryLink(category.name, category.anchor)) {
+                    passed++;
+                }
+            }
+            
+            logResult(`📊 Quick test results: ${passed}/${categories.length} category links working`, 
+                     passed === categories.length ? 'success' : 'warning');
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            logResult('🧪 Category Navigation Test Runner initialized', 'info');
+            logResult('Click a test button above to start testing', 'info');
+        });
+    </script>
+</body>
+</html>

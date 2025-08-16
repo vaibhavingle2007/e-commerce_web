@@ -24,27 +24,27 @@ A complete mini e-commerce website built with PHP, MySQL, and modern CSS. This p
 /ecommerce/
 ├── /assets/
 │   ├── /css/
-│   │   └── style.css          # Main stylesheet
-│   ├── /js/
-│   │   └── cart.js            # Cart functionality (future)
-│   └── /images/               # Product images
-├── /admin/
-│   ├── login.php              # Admin login
-│   ├── dashboard.php          # Admin dashboard
-│   ├── add_product.php        # Add new products
-│   ├── orders.php             # View all orders
-│   └── logout.php             # Admin logout
-├── /inc/
-│   ├── db.php                 # Database connection
-│   ├── header.php             # Site header
-│   └── footer.php             # Site footer
-├── index.php                  # Homepage with products
-├── product.php                # Individual product page
-├── cart.php                   # Shopping cart
-├── checkout.php               # Checkout process
-├── order_confirm.php          # Order confirmation
-├── database_setup.sql         # Database schema
-└── README.md                  # This file
+│   │   └── style.css          # Main stylesheet 
+│   ├── /js/ 
+│   │   └── cart.js            # Cart functionality (future) 
+│   └── /images/               # Product images 
+├── /admin/ 
+│   ├── login.php              # Admin login 
+│   ├── dashboard.php          # Admin dashboard 
+│   ├── add_product.php        # Add new products 
+│   ├── orders.php             # View all orders 
+│   └── logout.php             # Admin logout 
+├── /inc/ 
+│   ├── db.php                 # Database connection 
+│   ├── header.php             # Site header 
+│   └── footer.php             # Site footer 
+├── index.php                  # Homepage with products 
+├── product.php                # Individual product page 
+├── cart.php                   # Shopping cart 
+├── checkout.php               # Checkout process 
+├── order_confirm.php          # Order confirmation 
+├── database_setup.sql         # Database schema 
+└── README.md                  # This file 
 ```
 
 ## 🛠️ Installation & Setup
