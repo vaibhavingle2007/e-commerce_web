@@ -4,6 +4,16 @@ require_once 'inc/db.php';
 // Debug: Log checkout process
 error_log("Checkout process started - Session cart: " . print_r($_SESSION['cart'] ?? [], true));
 
+// Check database tables exist
+$required_tables = ['products', 'orders', 'order_items'];
+foreach ($required_tables as $table) {
+    $result = $conn->query("SHOW TABLES LIKE '$table'");
+    if ($result->num_rows === 0) {
+        error_log("Required table '$table' does not exist");
+        die("Database error: Required table '$table' is missing. Please run database setup.");
+    }
+}
+
 // Redirect if cart is empty
 if (empty($_SESSION['cart'])) {
     error_log("Checkout attempted with empty cart - redirecting to cart.php");
@@ -67,8 +77,17 @@ if ($_POST) {
         $conn->begin_transaction();
         
         try {
+            // Validate database connection
+            if (!$conn || $conn->connect_error) {
+                throw new Exception("Database connection failed: " . ($conn->connect_error ?? 'Unknown error'));
+            }
+            
             // Insert order
             $stmt = $conn->prepare("INSERT INTO orders (user_name, email, address, phone, total_amount) VALUES (?, ?, ?, ?, ?)");
+            if (!$stmt) {
+                throw new Exception("Failed to prepare order statement: " . $conn->error);
+            }
+            
             $stmt->bind_param("ssssd", $user_name, $email, $address, $phone, $grand_total);
             
             if (!$stmt->execute()) {
@@ -76,6 +95,10 @@ if ($_POST) {
             }
             
             $order_id = $conn->insert_id;
+            if (!$order_id) {
+                throw new Exception("Failed to get order ID after insertion");
+            }
+            
             error_log("Order inserted successfully with ID: $order_id");
             
             // Insert order items
@@ -91,18 +114,31 @@ if ($_POST) {
                 
                 // Insert order item
                 $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+                if (!$stmt) {
+                    throw new Exception("Failed to prepare order item statement: " . $conn->error);
+                }
+                
                 $stmt->bind_param("iiid", $order_id, $product_id, $quantity, $price);
                 
                 if (!$stmt->execute()) {
-                    throw new Exception("Failed to insert order item: " . $stmt->error);
+                    throw new Exception("Failed to insert order item for product ID $product_id: " . $stmt->error);
                 }
                 
                 // Update stock
                 $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+                if (!$stmt) {
+                    throw new Exception("Failed to prepare stock update statement: " . $conn->error);
+                }
+                
                 $stmt->bind_param("ii", $quantity, $product_id);
                 
                 if (!$stmt->execute()) {
-                    throw new Exception("Failed to update stock: " . $stmt->error);
+                    throw new Exception("Failed to update stock for product ID $product_id: " . $stmt->error);
+                }
+                
+                // Verify stock was actually updated
+                if ($stmt->affected_rows === 0) {
+                    throw new Exception("No stock was updated for product ID $product_id - product may not exist");
                 }
                 
                 error_log("Order item inserted: Product ID $product_id, Quantity $quantity, Price $price");
@@ -173,7 +209,7 @@ include 'inc/header.php';
                 </div>
                 
                 <div class="btn-container" style="margin-top: 30px;">
-                    <button type="submit" class="btn btn-cosmic">
+                    <button type="submit" class="btn btn-cosmic" id="checkout-btn">
                         Place Order - ₹<?php echo number_format($grand_total, 2); ?>
                     </button>
                     <a href="cart.php" class="btn btn-glass">Back to Cart</a>
@@ -205,5 +241,74 @@ include 'inc/header.php';
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutForm = document.querySelector('.checkout-form');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    
+    if (checkoutForm && checkoutBtn) {
+        checkoutForm.addEventListener('submit', function(e) {
+            // Show loading state
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = 'Processing Order...';
+            
+            // Basic validation
+            const requiredFields = checkoutForm.querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'var(--error)';
+                } else {
+                    field.style.borderColor = 'var(--border)';
+                }
+            });
+            
+            // Email validation
+            const emailField = checkoutForm.querySelector('input[type="email"]');
+            if (emailField && emailField.value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailField.value)) {
+                    isValid = false;
+                    emailField.style.borderColor = 'var(--error)';
+                    alert('Please enter a valid email address');
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                checkoutBtn.disabled = false;
+                checkoutBtn.innerHTML = 'Place Order - ₹<?php echo number_format($grand_total, 2); ?>';
+                return false;
+            }
+            
+            // If validation passes, show success message
+            setTimeout(() => {
+                if (!checkoutForm.querySelector('.message.error')) {
+                    checkoutBtn.innerHTML = 'Order Placed Successfully!';
+                }
+            }, 1000);
+        });
+        
+        // Real-time validation
+        const inputs = checkoutForm.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.style.borderColor = 'var(--error)';
+                } else {
+                    this.style.borderColor = 'var(--border)';
+                }
+            });
+            
+            input.addEventListener('focus', function() {
+                this.style.borderColor = 'var(--primary)';
+            });
+        });
+    }
+});
+</script>
 
 <?php include 'inc/footer.php'; ?> 

@@ -46,8 +46,11 @@
                 <li>
                     <a href="cart.php" class="cart-icon" aria-label="View shopping cart">
                         🛒
-                        <?php if (isset($_SESSION['cart']) && array_sum($_SESSION['cart']) > 0): ?>
-                            <span class="cart-badge" aria-label="<?php echo array_sum($_SESSION['cart']); ?> items in cart"><?php echo array_sum($_SESSION['cart']); ?></span>
+                        <?php 
+                        $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+                        if ($cart_count > 0): 
+                        ?>
+                            <span class="cart-badge" aria-label="<?php echo $cart_count; ?> items in cart"><?php echo $cart_count; ?></span>
                         <?php endif; ?>
                     </a>
                 </li>

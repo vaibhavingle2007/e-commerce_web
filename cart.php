@@ -8,6 +8,32 @@ if (!isset($_SESSION)) {
     die("Session not started!");
 }
 
+// Handle GET request for cart count
+if ($_GET && isset($_GET['action'])) {
+    if ($_GET['action'] === 'get_count') {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            header('Content-Type: application/json');
+            $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+            echo json_encode([
+                'success' => true,
+                'cart_count' => $cart_count,
+                'cart_items' => $_SESSION['cart'] ?? []
+            ]);
+            exit;
+        }
+    } elseif ($_GET['action'] === 'debug') {
+        // Debug endpoint to check cart status
+        header('Content-Type: application/json');
+        echo json_encode([
+            'session_id' => session_id(),
+            'cart' => $_SESSION['cart'] ?? [],
+            'cart_count' => isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0,
+            'session_data' => $_SESSION
+        ]);
+        exit;
+    }
+}
+
 // Handle cart actions
 if ($_POST) {
     $action = $_POST['action'] ?? '';

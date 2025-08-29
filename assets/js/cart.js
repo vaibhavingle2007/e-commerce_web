@@ -67,7 +67,39 @@ document.addEventListener('DOMContentLoaded', function() {
         init() {
             this.loadCartFromSession();
             this.setupCartButtons();
-            this.updateCartBadge();
+            this.syncWithServerCart();
+        }
+        
+        async syncWithServerCart() {
+            // Sync with server cart count on page load
+            try {
+                const response = await fetch('cart.php?action=get_count', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        // Update local cart with server data
+                        if (result.cart_items) {
+                            this.cart = result.cart_items;
+                            this.saveCartToSession();
+                        }
+                        this.updateCartBadge(result.cart_count);
+                        console.log('Cart synced with server. Count:', result.cart_count);
+                    }
+                } else {
+                    console.warn('Failed to sync cart with server:', response.status);
+                    this.updateCartBadge();
+                }
+            } catch (error) {
+                console.warn('Could not sync cart count:', error);
+                // Fallback to current implementation
+                this.updateCartBadge();
+            }
         }
         
         loadCartFromSession() {
@@ -162,13 +194,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else {
                             this.cart[productId] = quantity;
                         }
-                        this.cartCount += quantity;
                         
                         // Save to session storage
                         this.saveCartToSession();
                         
-                        // Update cart badge
-                        this.updateCartBadge();
+                        // Update cart badge with server count (most reliable)
+                        this.updateCartBadge(result.cart_count);
                         
                         // Show success message
                         this.showToast(result.message || 'Product added to cart!', 'success');
@@ -221,26 +252,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        updateCartBadge() {
-            const cartBadge = document.querySelector('.cart-badge');
-            if (cartBadge) {
-                cartBadge.textContent = this.cartCount;
-                cartBadge.style.display = this.cartCount > 0 ? 'block' : 'none';
+        updateCartBadge(serverCartCount = null) {
+            // Use server cart count if provided, otherwise use local count
+            const displayCount = serverCartCount !== null ? serverCartCount : this.cartCount;
+            
+            let cartBadge = document.querySelector('.cart-badge');
+            const cartIcon = document.querySelector('.cart-icon');
+            
+            if (displayCount > 0) {
+                if (!cartBadge && cartIcon) {
+                    // Create cart badge if it doesn't exist
+                    cartBadge = document.createElement('span');
+                    cartBadge.className = 'cart-badge';
+                    cartIcon.appendChild(cartBadge);
+                }
                 
-                // Also update the aria-label for accessibility
-                cartBadge.setAttribute('aria-label', `${this.cartCount} items in cart`);
+                if (cartBadge) {
+                    cartBadge.textContent = displayCount;
+                    cartBadge.style.display = 'flex';
+                    cartBadge.setAttribute('aria-label', `${displayCount} items in cart`);
+                    
+                    // Add animation for visual feedback
+                    cartBadge.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        cartBadge.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            } else {
+                // Hide badge when cart is empty
+                if (cartBadge) {
+                    cartBadge.style.display = 'none';
+                }
             }
             
-            // If no cart badge exists, create one
-            if (!cartBadge && this.cartCount > 0) {
-                const cartIcon = document.querySelector('.cart-icon');
-                if (cartIcon) {
-                    const newBadge = document.createElement('span');
-                    newBadge.className = 'cart-badge';
-                    newBadge.textContent = this.cartCount;
-                    newBadge.setAttribute('aria-label', `${this.cartCount} items in cart`);
-                    cartIcon.appendChild(newBadge);
-                }
+            // Update local cart count to match server
+            if (serverCartCount !== null) {
+                this.cartCount = serverCartCount;
             }
         }
         
@@ -579,7 +626,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.CartUtils = {
         formatPrice: formatPrice,
         cartManager: cartManager,
-        isTouchDevice: isTouchDevice
+        isTouchDevice: isTouchDevice,
+        refreshCartBadge: function() {
+            if (cartManager) {
+                cartManager.syncWithServerCart();
+            }
+        }
     };
     
     // Performance monitoring (development only)
